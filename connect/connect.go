@@ -83,10 +83,10 @@ func (c *Connect) RunTcp() {
 	Buckets := make([]*Bucket, connectConfig.ConnectBucket.CpuNum)
 	for i := 0; i < connectConfig.ConnectBucket.CpuNum; i++ {
 		Buckets[i] = NewBucket(BucketOptions{
-			ChannelSize:   connectConfig.ConnectBucket.Channel,
-			RoomSize:      connectConfig.ConnectBucket.Room,
-			RoutineAmount: connectConfig.ConnectBucket.RoutineAmount,
-			RoutineSize:   connectConfig.ConnectBucket.RoutineSize,
+			ChannelSize:   connectConfig.ConnectBucket.Channel, // 1024
+			RoomSize:      connectConfig.ConnectBucket.Room, // 1024
+			RoutineAmount: connectConfig.ConnectBucket.RoutineAmount, // 32
+			RoutineSize:   connectConfig.ConnectBucket.RoutineSize, // 20
 		})
 	}
 	operator := new(DefaultOperator)

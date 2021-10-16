@@ -29,6 +29,7 @@ type RpcConnect struct {
 }
 
 func (c *Connect) InitLogicRpcClient() (err error) {
+	//@todo 这里需要用sync.Once吗？
 	once.Do(func() {
 		d := client.NewEtcdV3Discovery(
 			config.Conf.Common.CommonEtcd.BasePath,

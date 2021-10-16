@@ -31,6 +31,7 @@ func NewChannel(size int) (c *Channel) {
 }
 
 func (ch *Channel) Push(msg *proto.Msg) (err error) {
+	//@todo 这里为什么要用 select 而不是直接 ch.broadcast <- msg？
 	select {
 	case ch.broadcast <- msg:
 	default:

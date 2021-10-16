@@ -78,6 +78,7 @@ func (c *Connect) acceptTcp(listener *net.TCPListener) {
 			logrus.Errorf("conn.SetWriteBuffer() error:%s", err.Error())
 			return
 		}
+		//@todo 这里为什么要用goroutine?
 		go c.ServeTcp(DefaultServer, conn, r)
 		if r++; r == maxInt {
 			logrus.Infof("conn.acceptTcp num is:%d", r)
@@ -116,6 +117,7 @@ func (c *Connect) readDataFromTcp(s *Server, ch *Channel) {
 		return
 	}()
 	// scanner
+	//@todo 需要学习这里的拆包方法
 	scannerPackage := bufio.NewScanner(ch.connTcp)
 	scannerPackage.Split(func(data []byte, atEOF bool) (advance int, token []byte, err error) {
 		if !atEOF && data[0] == 'v' {
@@ -132,6 +134,7 @@ func (c *Connect) readDataFromTcp(s *Server, ch *Channel) {
 	scanTimes := 0
 	for {
 		scanTimes++
+		//@todo 这里的判断是啥意思？
 		if scanTimes > 3 {
 			logrus.Infof("scannedPack times is:%d", scanTimes)
 			break
@@ -194,6 +197,7 @@ func (c *Connect) readDataFromTcp(s *Server, ch *Channel) {
 					RoomId:       rawTcpMsg.RoomId,
 					Op:           config.OpRoomSend,
 				}
+				//@todo 这里为啥用 api/rpc,仅仅是为了复用？
 				code, msg := rpc.RpcLogicObj.PushRoom(req)
 				logrus.Infof("tcp conn push msg to room,err code is:%d,err msg is:%s", code, msg)
 			}

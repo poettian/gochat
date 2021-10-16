@@ -43,6 +43,7 @@ func NewBucket(bucketOptions BucketOptions) (b *Bucket) {
 }
 
 func (b *Bucket) PushRoom(ch chan *proto.PushRoomMsgRequest) {
+	//@todo 从ch中收数据，推到room下的所有channel里
 	for {
 		var (
 			arg  *proto.PushRoomMsgRequest
@@ -56,6 +57,7 @@ func (b *Bucket) PushRoom(ch chan *proto.PushRoomMsgRequest) {
 }
 
 func (b *Bucket) Room(rid int) (room *Room) {
+	//@todo 这里为什么要加读锁呢？
 	b.cLock.RLock()
 	room, _ = b.rooms[rid]
 	b.cLock.RUnlock()
@@ -90,6 +92,7 @@ func (b *Bucket) DeleteChannel(ch *Channel) {
 		ok   bool
 		room *Room
 	)
+	//@todo 这里是对整个桶加锁
 	b.cLock.RLock()
 	if ch, ok = b.chs[ch.userId]; ok {
 		room = b.chs[ch.userId].Room

@@ -28,7 +28,7 @@ func New() *Chat {
 	return &Chat{}
 }
 
-//api server,Also, you can use gin,echo ... framework wrap
+// Run api server,Also, you can use gin,echo ... framework wrap
 func (c *Chat) Run() {
 	//init rpc client
 	rpc.InitLogicRpcClient()
@@ -39,6 +39,7 @@ func (c *Chat) Run() {
 	gin.SetMode(runMode)
 	apiConfig := config.Conf.Api
 	port := apiConfig.ApiBase.ListenPort
+	// @tip 这里无需再调用 flag.Parse() 了吧
 	flag.Parse()
 
 	srv := &http.Server{
@@ -51,6 +52,7 @@ func (c *Chat) Run() {
 			logrus.Errorf("start listen : %s\n", err)
 		}
 	}()
+	// @tip 这里就会阻塞住
 	// if have two quit signal , this signal will priority capture ,also can graceful shutdown
 	quit := make(chan os.Signal)
 	signal.Notify(quit, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
@@ -63,5 +65,7 @@ func (c *Chat) Run() {
 		logrus.Errorf("Server Shutdown:", err)
 	}
 	logrus.Infof("Server exiting")
+
+	// @tip 这会让主线程也退出吧; os.Exit() 会让 defer 不被执行
 	os.Exit(0)
 }

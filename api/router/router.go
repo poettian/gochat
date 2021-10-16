@@ -54,10 +54,12 @@ type FormCheckSessionId struct {
 	AuthToken string `form:"authToken" json:"authToken" binding:"required"`
 }
 
+// CheckSessionId @tip 检查session的中间件
 func CheckSessionId() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var formCheckSessionId FormCheckSessionId
 		if err := c.ShouldBindBodyWith(&formCheckSessionId, binding.JSON); err != nil {
+			// @tip 这里不需要调用 c.Abort()，后面的流程会包含该调用
 			c.Abort()
 			tools.ResponseWithCode(c, tools.CodeSessionError, nil, nil)
 			return

@@ -31,6 +31,7 @@ func InitLogicRpcClient() {
 			nil,
 		)
 		LogicRpcClient = client.NewXClient(config.Conf.Common.CommonEtcd.ServerPathLogic, client.Failtry, client.RandomSelect, d, client.DefaultOption)
+		//@todo var RpcLogicObj *RpcLogic 只是定义了 RpcLogicObj 的类型，要想使用还是必须先 new 一下
 		RpcLogicObj = new(RpcLogic)
 	})
 	if LogicRpcClient == nil {

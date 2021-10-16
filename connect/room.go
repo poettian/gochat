@@ -50,6 +50,7 @@ func (r *Room) Put(ch *Channel) (err error) {
 
 func (r *Room) Push(msg *proto.Msg) {
 	r.rLock.RLock()
+	//@todo 遍历room下的Channels，挨个推送
 	for ch := r.next; ch != nil; ch = ch.Next {
 		ch.Push(msg)
 	}

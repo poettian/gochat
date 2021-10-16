@@ -18,7 +18,7 @@ import (
 type Server struct {
 	Buckets   []*Bucket
 	Options   ServerOptions
-	bucketIdx uint32
+	bucketIdx uint32 //@todo 这里为啥是uint32？
 	operator  Operator
 }
 

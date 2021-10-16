@@ -27,6 +27,7 @@ func (p *StickPackage) Pack(writer io.Writer) error {
 	var err error
 	err = binary.Write(writer, binary.BigEndian, &p.Version)
 	err = binary.Write(writer, binary.BigEndian, &p.Length)
+	//@todo 这里为什么不直接用 writer.Write(p.Msg)?
 	err = binary.Write(writer, binary.BigEndian, &p.Msg)
 	return err
 }
