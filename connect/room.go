@@ -49,6 +49,7 @@ func (r *Room) Put(ch *Channel) (err error) {
 }
 
 func (r *Room) Push(msg *proto.Msg) {
+	//@todo 这里加锁的目的是啥？
 	r.rLock.RLock()
 	for ch := r.next; ch != nil; ch = ch.Next {
 		ch.Push(msg)

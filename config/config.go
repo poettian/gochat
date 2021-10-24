@@ -8,6 +8,7 @@ package config
 import (
 	"github.com/spf13/viper"
 	"os"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"sync"
@@ -57,8 +58,8 @@ func getCurrentDir() string {
 func Init() {
 	once.Do(func() {
 		env := GetMode()
-		//realPath, _ := filepath.Abs("./")
-		realPath := getCurrentDir()
+		realPath, _ := filepath.Abs("./config")
+		//realPath := getCurrentDir()
 		configFilePath := realPath + "/" + env + "/"
 		viper.SetConfigType("toml")
 		viper.SetConfigName("/connect")

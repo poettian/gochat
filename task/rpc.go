@@ -13,31 +13,37 @@ import (
 	"gochat/config"
 	"gochat/proto"
 	"gochat/tools"
-	"strings"
 )
 
 var RpcConnectClientList map[string]client.XClient
 
 func (task *Task) InitConnectRpcClient() (err error) {
-	etcdConfig := config.Conf.Common.CommonEtcd
-	d := client.NewEtcdV3Discovery(etcdConfig.BasePath, etcdConfig.ServerPathConnect, []string{etcdConfig.Host}, nil)
-	if len(d.GetServices()) <= 0 {
-		logrus.Panicf("no etcd server find!")
-	}
-	RpcConnectClientList = make(map[string]client.XClient, len(d.GetServices()))
-	for _, connectConf := range d.GetServices() {
-		logrus.Infof("key is:%s,value is:%s", connectConf.Key, connectConf.Value)
-		connectConf.Value = strings.Replace(connectConf.Value, "=&tps=0", "", 1)
-		//serverId, err := strconv.ParseInt(connectConf.Value, 10, 64)
-		serverId := connectConf.Value
-		if err != nil {
-			logrus.Panicf("InitConnect err，Can't find serverId. error: %s", err.Error())
-		}
-		d := client.NewPeer2PeerDiscovery(connectConf.Key, "")
-		//under serverId
-		RpcConnectClientList[serverId] = client.NewXClient(etcdConfig.ServerPathConnect, client.Failtry, client.RandomSelect, d, client.DefaultOption)
-		logrus.Infof("InitConnectRpcClient addr %s, v %+v", connectConf.Key, RpcConnectClientList[serverId])
-	}
+	//etcdConfig := config.Conf.Common.CommonEtcd
+	//d := client.NewEtcdV3Discovery(etcdConfig.BasePath, etcdConfig.ServerPathConnect, []string{etcdConfig.Host}, nil)
+	//if len(d.GetServices()) <= 0 {
+	//	logrus.Panicf("no etcd server find!")
+	//}
+	//RpcConnectClientList = make(map[string]client.XClient, len(d.GetServices()))
+	//for _, connectConf := range d.GetServices() {
+	//	logrus.Infof("key is:%s,value is:%s", connectConf.Key, connectConf.Value)
+	//	connectConf.Value = strings.Replace(connectConf.Value, "=&tps=0", "", 1)
+	//	//serverId, err := strconv.ParseInt(connectConf.Value, 10, 64)
+	//	serverId := connectConf.Value
+	//	if err != nil {
+	//		logrus.Panicf("InitConnect err，Can't find serverId. error: %s", err.Error())
+	//	}
+	//	d := client.NewPeer2PeerDiscovery(connectConf.Key, "")
+	//	//under serverId
+	//	RpcConnectClientList[serverId] = client.NewXClient(etcdConfig.ServerPathConnect, client.Failtry, client.RandomSelect, d, client.DefaultOption)
+	//	logrus.Infof("InitConnectRpcClient addr %s, v %+v", connectConf.Key, RpcConnectClientList[serverId])
+	//}
+
+	RpcConnectClientList = make(map[string]client.XClient, 1)
+	serverId := "ws-24a80617-8b89-4358-8d4d-a5249b465513="
+	d := client.NewMultipleServersDiscovery([]*client.KVPair{{Key: "tcp@0.0.0.0:6912"},{Key: "tcp@0.0.0.0:6913"}})
+	RpcConnectClientList[serverId] = client.NewXClient(config.Conf.Common.CommonEtcd.ServerPathConnect, client.Failtry, client.RandomSelect, d, client.DefaultOption)
+	logrus.Infof("InitConnectRpcClient %+v", RpcConnectClientList[serverId])
+
 	return
 }
 

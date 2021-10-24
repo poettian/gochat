@@ -55,9 +55,7 @@ func (logic *Logic) InitRpcServer() (err error) {
 
 func (logic *Logic) createRpcServer(network string, addr string) {
 	s := server.NewServer()
-	logic.addRegistryPlugin(s, network, addr)
-	// serverId must be unique
-	//err := s.RegisterName(config.Conf.Common.CommonEtcd.ServerPathLogic, new(RpcLogic), fmt.Sprintf("%s", config.Conf.Logic.LogicBase.ServerId))
+	//logic.addRegistryPlugin(s, network, addr)
 	err := s.RegisterName(config.Conf.Common.CommonEtcd.ServerPathLogic, new(RpcLogic), fmt.Sprintf("%s", logic.ServerId))
 	if err != nil {
 		logrus.Errorf("register error:%s", err.Error())
@@ -164,6 +162,7 @@ func (logic *Logic) RedisPushRoomInfo(roomId int, count int, roomUserInfo map[st
 }
 
 func (logic *Logic) getRoomUserKey(authKey string) string {
+	//@todo 这里需要用 bytes.Buffer ？
 	var returnKey bytes.Buffer
 	returnKey.WriteString(config.RedisRoomPrefix)
 	returnKey.WriteString(authKey)

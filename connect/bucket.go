@@ -90,6 +90,7 @@ func (b *Bucket) DeleteChannel(ch *Channel) {
 		ok   bool
 		room *Room
 	)
+	//@todo 这里，包括后面 room 里删除 channel，为啥不加写锁呢而是加了一个读锁呢？
 	b.cLock.RLock()
 	if ch, ok = b.chs[ch.userId]; ok {
 		room = b.chs[ch.userId].Room

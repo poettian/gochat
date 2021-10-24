@@ -30,12 +30,13 @@ type RpcConnect struct {
 
 func (c *Connect) InitLogicRpcClient() (err error) {
 	once.Do(func() {
-		d := client.NewEtcdV3Discovery(
-			config.Conf.Common.CommonEtcd.BasePath,
-			config.Conf.Common.CommonEtcd.ServerPathLogic,
-			[]string{config.Conf.Common.CommonEtcd.Host},
-			nil,
-		)
+		//d := client.NewEtcdV3Discovery(
+		//	config.Conf.Common.CommonEtcd.BasePath,
+		//	config.Conf.Common.CommonEtcd.ServerPathLogic,
+		//	[]string{config.Conf.Common.CommonEtcd.Host},
+		//	nil,
+		//)
+		d := client.NewMultipleServersDiscovery([]*client.KVPair{{Key: "tcp@0.0.0.0:6900"},{Key: "tcp@0.0.0.0:6901"}})
 		logicRpcClient = client.NewXClient(config.Conf.Common.CommonEtcd.ServerPathLogic, client.Failtry, client.RandomSelect, d, client.DefaultOption)
 	})
 	if logicRpcClient == nil {
@@ -168,6 +169,7 @@ func (c *Connect) createConnectTcpRpcServer(network string, addr string) {
 }
 
 func addRegistryPlugin(s *server.Server, network string, addr string) {
+	return
 	r := &serverplugin.EtcdV3RegisterPlugin{
 		ServiceAddress: network + "@" + addr,
 		EtcdServers:    []string{config.Conf.Common.CommonEtcd.Host},

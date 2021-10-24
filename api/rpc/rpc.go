@@ -24,12 +24,13 @@ var RpcLogicObj *RpcLogic
 
 func InitLogicRpcClient() {
 	once.Do(func() {
-		d := client.NewEtcdV3Discovery(
-			config.Conf.Common.CommonEtcd.BasePath,
-			config.Conf.Common.CommonEtcd.ServerPathLogic,
-			[]string{config.Conf.Common.CommonEtcd.Host},
-			nil,
-		)
+		//d := client.NewEtcdV3Discovery(
+		//	config.Conf.Common.CommonEtcd.BasePath,
+		//	config.Conf.Common.CommonEtcd.ServerPathLogic,
+		//	[]string{config.Conf.Common.CommonEtcd.Host},
+		//	nil,
+		//)
+		d := client.NewMultipleServersDiscovery([]*client.KVPair{{Key: "tcp@127.0.0.1:6900"},{Key: "tcp@127.0.0.1:6901"}})
 		LogicRpcClient = client.NewXClient(config.Conf.Common.CommonEtcd.ServerPathLogic, client.Failtry, client.RandomSelect, d, client.DefaultOption)
 		RpcLogicObj = new(RpcLogic)
 	})

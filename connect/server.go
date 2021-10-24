@@ -106,6 +106,7 @@ func (s *Server) readPump(ch *Channel, c *Connect) {
 		ch.conn.Close()
 	}()
 
+	//@todo 下面的这几个方法是干啥的？
 	ch.conn.SetReadLimit(s.Options.MaxMessageSize)
 	ch.conn.SetReadDeadline(time.Now().Add(s.Options.PongWait))
 	ch.conn.SetPongHandler(func(string) error {

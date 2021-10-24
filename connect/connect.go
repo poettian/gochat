@@ -56,7 +56,8 @@ func (c *Connect) Run() {
 		WriteBufferSize: 1024,
 		BroadcastSize:   512,
 	})
-	c.ServerId = fmt.Sprintf("%s-%s", "ws", uuid.New().String())
+	//c.ServerId = fmt.Sprintf("%s-%s", "ws", uuid.New().String())
+	c.ServerId = "ws-24a80617-8b89-4358-8d4d-a5249b465513="
 	//init Connect layer rpc server ,task layer will call this
 	if err := c.InitConnectWebsocketRpcServer(); err != nil {
 		logrus.Panicf("InitConnectWebsocketRpcServer Fatal error: %s \n", err.Error())

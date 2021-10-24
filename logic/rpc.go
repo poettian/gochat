@@ -310,6 +310,7 @@ func (rpc *RpcLogic) Connect(ctx context.Context, args *proto.ConnectRequest, re
 		if err != nil {
 			logrus.Warnf("logic set err:%s", err)
 		}
+		//@todo 这里先去查了一下，而不是直接设置
 		if RedisClient.HGet(roomUserKey, fmt.Sprintf("%d", reply.UserId)).Val() == "" {
 			RedisClient.HSet(roomUserKey, fmt.Sprintf("%d", reply.UserId), userInfo["userName"])
 			// add room user count ++
@@ -338,6 +339,7 @@ func (rpc *RpcLogic) DisConnect(ctx context.Context, args *proto.DisConnectReque
 		}
 	}
 	//below code can optimize send a signal to queue,another process get a signal from queue,then push event to websocket
+	//@todo 连接的时候为啥没推 redis ？
 	roomUserInfo, err := RedisClient.HGetAll(roomUserKey).Result()
 	if err != nil {
 		logrus.Warnf("RedisCli HGetAll roomUserInfo key:%s, err: %s", roomUserKey, err)
